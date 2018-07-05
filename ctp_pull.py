@@ -25,26 +25,28 @@ class Test:
 		self.ordered = False
 		self.needAuth = False
 		self.RelogEnable = True
+		self.ff = CThostFtdcMarketDataField()
 
 	def q_OnFrontConnected(self):
 		print('connected')
 		self.q.ReqUserLogin(BrokerID=self.broker, UserID=self.investor, Password=self.pwd)
 
 	def q_OnRspUserLogin(self, rsp, info, req, last):
-		print(info)
+		#print(info)
 
 		#insts = create_string_buffer(b'cu', 5)
 		self.q.SubscribeMarketData('rb1809')
 		self.q.SubscribeMarketData('rb1901')
 
 	def q_OnTick(self, tick):
-		print('-----------------------------------')
-		f = CThostFtdcMarketDataField()
-		f = tick
-		print(tick)
+		#print('-----------------------------------')
+		self.ff = CThostFtdcMarketDataField()
+		self.ff = tick
+		#print(tick)
 
+ 
 		if not self.ordered:
-			_thread.start_new_thread(self.Order, (f,))
+			_thread.start_new_thread(self.Order, (self.ff,))
 			self.ordered = True
 
 	def Order(self, f):
@@ -89,7 +91,7 @@ class Test:
 	def OnRspUserLogin(self, rsp, info, req, last):
 		i = CThostFtdcRspInfoField()
 		i = info
-		print(i.getErrorMsg())
+		#print(i.getErrorMsg())
 
 		if i.getErrorID() == 0:
 			self.Session = rsp.getSessionID()
@@ -173,11 +175,16 @@ class Test:
 		self.t.SubscribePrivateTopic(nResumeType=2)#quick
 		self.t.SubscribePrivateTopic(nResumeType=2)
 		self.t.Init()
-		self.t.Join()
+		return self.ff       
+		#self.t.Join()
 
 
 if __name__ == '__main__':
 	t = Test()
-	t.Run()
 	
-    input()
+	a = t.Run()
+	print(a.getInstrumentID())
+    
+
+    
+
