@@ -41,7 +41,7 @@ class Greeks_Euro:
             theta = self.c1+self.c3
         else:
             theta = np.nan
-        return theta
+        return theta/365
     
     def cpt_gamma(self):
         gamma = 1/(self.info['und_price']*np.sqrt(2*np.pi*(self.info['vol']**2)*self.info['ttm']))*np.exp((-self.d1**2)/2)
@@ -50,7 +50,7 @@ class Greeks_Euro:
     
     def cpt_vega(self):
         vega = np.sqrt(self.info['ttm'])*self.info['und_price']*np.exp((-self.d1**2)/2)/np.sqrt(2*np.pi)
-        return vega
+        return vega/100
     
     def cpt_rho(self):
         if self.info['status'] =='call':
@@ -59,14 +59,14 @@ class Greeks_Euro:
             rho = -self.info['strike']*self.info['ttm']*np.exp(-self.info['rf']*self.info['ttm'])*norm.cdf(-self.d2)
         else:
             rho = np.nan
-        return rho
+        return rho/100
 
     def cpt_all_greeks(self):
-        res = {'delta':self.cpt_delta(),
-               'gamma':self.cpt_gamma(),
-               'vega':self.cpt_vega(),
-               'theta':self.cpt_theta(),
-               'rho':self.cpt_rho()
+        res = {'Delta':round(self.cpt_delta(),3),
+               'Gamma':round(self.cpt_gamma(),3),
+               'Vega(%)':round(self.cpt_vega(),3),
+               'ThetaPerday':round(self.cpt_theta(),3),
+               'Rho(%)':round(self.cpt_rho(),3)     
                }
         return res
 
@@ -165,11 +165,11 @@ class Aisan_Greeks:
 
     def cpt_all_greeks(self):
         delta,gamma = self.cpt_delta_gamma()
-        res = {'delta':delta,
-               'gamma':gamma,
-               'vega-per%%':self.cpt_vega(),
-               'theta-perday':self.cpt_theta(),
-               'rho-per%%':self.cpt_rho()
+        res = {'Delta':round(delta,3),
+               'Gamma':round(gamma,3),
+               'Vega(%)':round(self.cpt_vega(),3),
+               'ThetaPerday':round(self.cpt_theta(),3),
+               'Rho(%)':round(self.cpt_rho(),3)
                }
         return res
         
