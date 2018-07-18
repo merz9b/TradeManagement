@@ -17,9 +17,14 @@ def GetPortDetail2(orderid):
     strall = "SELECT * FROM futurexdb.model_params where modelinstance = '%s';"%orderid
     a=PyMySQLreadZH.dbconn(strall)
     return a
+def GetPortSub():
+    strall =" SELECT * FROM futurexdb.model_params where model in('oao','ovo')and paramname='ref_contract' ;"
+    a=PyMySQLreadZH.dbconn(strall)
+    a = a['paramstring'].drop_duplicates().tolist()
+    return a
 #%%使用方法
 if __name__ == '__main__':
     a = GetPortDetail('OTC_DCE-m',12001)
     print(a)
-    b = GetPortDetail2('oao_13001_11001_1530088376.6860166')
+    b = GetPortDetail2('oao_13001_11001_1529384746.623211')
     print(b)

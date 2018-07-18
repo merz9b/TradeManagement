@@ -20,10 +20,30 @@ import Greeks
 import OptionPricer
 import GetMultiplier
 import Tprice_RealTime
-
-class Application(object):
+import CTPUse
+from py_ctp.quote import Quote
+from py_ctp.ctp_struct import *
+import time
+import _thread
+class Application(CTPUse.Test):
     def __init__(self):
         #construct a UI
+        self.Session = ''
+        self.q = Quote()
+        self.req = 0
+        self.ordered = False
+        self.needAuth = False
+        self.RelogEnable = True
+        self.ff = CThostFtdcMarketDataField()
+        self.a=time.time()
+        self.datas=pd.DataFrame(columns=['code','price','time'])
+        self.codelist=GetPortDetail.GetPortSub()
+        #self.datas.loc[time.time(),['code','price']]=['a',0]
+        self.datas['code']=self.codelist
+        self.datas['price']=0
+        self.datas['time']=time.time()
+        self.datab=self.datas
+        self.q = Quote()
         self.root = Tk()
         self.root.title('国信期货衍生品风险管理界面')
     
@@ -57,7 +77,10 @@ class Application(object):
                     command=lambda : self.create_greeks_widgets(),activebackground = button_active_bg,\
                     font = tkFont.Font(size=12, weight=tkFont.BOLD))
         bt.pack(fill='both')
-    
+        
+        #_thread.start_new_thread(self.UpdateAAA,())
+
+
     def select_portfolio_symbol(self,event):
         a = GetPoSymbol.GetPoSymbol(self.TraderChosen.get())
         portfolio_lst = a.portfolio_symbol.tolist()
@@ -74,7 +97,7 @@ class Application(object):
         self.info_greeks = []
         self.box = []
         self.info_vol = []
-        
+        print(self.datas)
         for i in range(len(info1)):
             info2 = GetPortDetail.GetPortDetail2(info1.loc[i,'modelinstance'])
             current_date = datetime.datetime.now().date()
@@ -83,6 +106,11 @@ class Application(object):
             underlying = info2[info2['paramname']=='ref_underlying']['paramstring'].values[0]
             exchange = info2[info2['paramname']=='ref_exchange']['paramstring'].values[0]
             contract_name = exchange+'_'+info2[info2['paramname']=='ref_contract']['paramstring'].values[0]
+            
+            contract = str.lower(info2[info2['paramname']=='ref_contract']['paramstring'].values[0])
+            if not contract[-4].isdigit():
+                contract = str.upper(contract)
+                
             multiplier = GetMultiplier.GetMultiplier(underlying)['multiplier'].values[0]
             
             #print(multiplier)
@@ -97,7 +125,7 @@ class Application(object):
                        'Rf':info1.loc[i,'riskfree_rate'],\
                        'OptionType':'call' if info2[info2['paramname']=='option_type']['paramstring'].values[0]=='0' else 'put',\
                        'HistoricalAvg':info2[info2['paramname']=='strike']['paramstring'].values[0],\
-                       'CurrentPrice':info2[info2['paramname']=='strike']['paramstring'].values[0],\
+                       'CurrentPrice':self.datab[self.datab['code']==contract]['price'].values[0],\
                        'Quantity':info1.loc[i,'quantity'],\
                        'Multiplier':multiplier,\
                        'Exchange':exchange,\
@@ -130,7 +158,10 @@ class Application(object):
             else:
                 pass
         #print(self.info_greeks,self.box)
-        
+        self.create_vol_widgets()
+        self.create_greeks_widgets() 
+        print('gengxin')
+        self.root.after(60000, self.UpdateData)
         
     def create_section(self):
         self.sec1 = LabelFrame(self.root, text='Contract')
@@ -165,7 +196,7 @@ class Application(object):
                 l = LabelFrame(self.sec4,text = each)
                 l.pack(fill='y',side='left')
                 self.sec_sub_dict_vol.update({each:l})
-        
+       # _thread.start_new_thread(self.UpdateAAA,())
     def create_widgets(self,value):
         box = {}
         for each in list(self.sec_sub_dict.keys()):
@@ -281,15 +312,30 @@ class Application(object):
             VS.append(vol_sell['vol'].values[0])
             
         return VB,VS
+   
+#    timeb=time.time()
+#    if timeb-self.a>5:
+#            #print(self.datas)
+#        self.a=timeb
+#        _thread.start_new_thread(self.UpdateAAA,())
+#        print(1)
             
                 
-        
+    def UpdateAAA(self):
+
+        print(time.time())
+        self.UpdateData
+        #self.create_vol_widgets()
+        #self.create_greeks_widgets()    
+        self.root.after(2000, self.UpdateAAA)        
 
 
 
 a = Application()
 a.init_widgets()
 a.create_section()
+#a.UpdateData()
+a.StartQuote()
 
 a.root.mainloop()
 

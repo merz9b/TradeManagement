@@ -42,7 +42,7 @@ class Test:
 		#print('-----------------------------------')
 		self.ff = CThostFtdcMarketDataField()
 		self.ff = tick
-		#print(tick)
+		print(self.ff)
 
  
 		if not self.ordered:
