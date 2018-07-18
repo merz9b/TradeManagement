@@ -337,7 +337,7 @@ a.create_section()
 #a.UpdateData()
 a.StartQuote()
 
-a.root.mainloop()
+#a.root.mainloop()
 
 
 

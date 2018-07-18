@@ -21,21 +21,21 @@ import tkinter
 class Test:
 
     def __init__(self):
-        self.Session = ''
-        self.q = Quote()
+        #self.Session = ''
+        #self.q = Quote()
         self.t = Trade()
-        self.req = 0
-        self.ordered = False
-        self.needAuth = False
-        self.RelogEnable = True
-        self.ff = CThostFtdcMarketDataField()
-        self.a=time.time()
-        self.datas=pd.DataFrame(columns=['code','price','time'])
+        #self.req = 0
+        #self.ordered = False
+        #self.needAuth = False
+        #self.RelogEnable = True
+        #self.ff = CThostFtdcMarketDataField()
+        #self.a=time.time()
+        #self.datas=pd.DataFrame(columns=['code','price','time'])
         #self.codelist=['rb1901','hc1901','m1901','c1901','i1901','CF809','AP807','ru1809','ru1808','rb1809']
         #self.datas.loc[time.time(),['code','price']]=['a',0]
-        self.datas['code']=self.codelist
-        self.datas['price']=0
-        self.datas['time']=time.time()
+        #self.datas['code']=self.codelist
+        #self.datas['price']=0
+        #self.datas['time']=time.time()
         
         
         
@@ -126,6 +126,6 @@ class Test:
         #self.q.Join()
  
 if __name__ == '__main__':
-    t = Test()
-    t.StartQuote()    
+    aaa = Test()
+    aaa.StartQuote()    
     
