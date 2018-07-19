@@ -61,10 +61,11 @@ class Application(CTPUse.Test):
         self.PortfolioChosen = ttk.Combobox(labelframe1, width=12)
         self.PortfolioChosen.pack(fill='both')
         
+        self.PortfolioChosen.bind("<<ComboboxSelected>>",self.UpdateDataA)
         button_bg = '#D5E0EE'  
         button_active_bg = '#E5E35B'
         bt = Button(labelframe1,text='UpdateData',bg=button_bg, padx=50, pady=3,fg='green',\
-                    command=lambda : self.UpdateData(),activebackground = button_active_bg,\
+                    command=lambda : self.UpdateDataOrigin(),activebackground = button_active_bg,\
                     font = tkFont.Font(size=12, weight=tkFont.BOLD))
         bt.pack(fill='both')
         
@@ -78,15 +79,16 @@ class Application(CTPUse.Test):
                     font = tkFont.Font(size=12, weight=tkFont.BOLD))
         bt.pack(fill='both')
         
-        #_thread.start_new_thread(self.UpdateAAA,())
+
 
 
     def select_portfolio_symbol(self,event):
         a = GetPoSymbol.GetPoSymbol(self.TraderChosen.get())
         portfolio_lst = a.portfolio_symbol.tolist()
         self.PortfolioChosen['values'] = portfolio_lst
-    
-    def UpdateData(self):
+        self.PortfolioChosen.current(0)
+        self.UpdateData()              #初始开启自动循环
+    def UpdateDataOrigin(self):
         #删除原先的集合
         self.vol_lst = []
         self.clear(self.sec_sub_dict)
@@ -97,7 +99,7 @@ class Application(CTPUse.Test):
         self.info_greeks = []
         self.box = []
         self.info_vol = []
-        print(self.datas)
+        
         for i in range(len(info1)):
             info2 = GetPortDetail.GetPortDetail2(info1.loc[i,'modelinstance'])
             current_date = datetime.datetime.now().date()
@@ -160,18 +162,29 @@ class Application(CTPUse.Test):
         #print(self.info_greeks,self.box)
         self.create_vol_widgets()
         self.create_greeks_widgets() 
-        print('gengxin')
-        self.root.after(60000, self.UpdateData)
+        print('===============================')
+        print('更新CTP价格数据')
+        print(self.datab)
+        print('===============================')
+    def UpdateDataA(self,event):
+        self.UpdateDataOrigin()
+        
+    def UpdateData(self):
+        self.UpdateDataOrigin()
+        self.root.after(150000, self.UpdateData)
         
     def create_section(self):
-        self.sec1 = LabelFrame(self.root, text='Contract')
-        self.sec1.pack(fill='y',side='left')
-        self.sec2 = LabelFrame(self.root, text='Parameters')
-        self.sec2.pack(fill='y',side='left')
-        self.sec4 = LabelFrame(self.root, text='Current_Vol')
-        self.sec4.pack(fill='y',side='left')
         self.sec3 = LabelFrame(self.root, text='Greeks')
-        self.sec3.pack(fill='y',side='left')
+        self.sec3.pack(fill='y',side='right')
+        self.sec4 = LabelFrame(self.root, text='Current_Vol')
+        self.sec4.pack(fill='y',side='right')
+        self.sec2 = LabelFrame(self.root, text='Parameters')
+        self.sec2.pack(fill='y',side='right')
+        self.sec1 = LabelFrame(self.root, text='Contract')
+        self.sec1.pack(fill='y',side='right')
+
+
+
         
         
         sec_sub = {'sec1':['ContractName'],'sec2':['Strike','TTM(days)','Type',\
@@ -313,28 +326,13 @@ class Application(CTPUse.Test):
             
         return VB,VS
    
-#    timeb=time.time()
-#    if timeb-self.a>5:
-#            #print(self.datas)
-#        self.a=timeb
-#        _thread.start_new_thread(self.UpdateAAA,())
-#        print(1)
-            
-                
-    def UpdateAAA(self):
-
-        print(time.time())
-        self.UpdateData
-        #self.create_vol_widgets()
-        #self.create_greeks_widgets()    
-        self.root.after(2000, self.UpdateAAA)        
+   
 
 
 
 a = Application()
-a.init_widgets()
 a.create_section()
-#a.UpdateData()
+a.init_widgets()
 a.StartQuote()
 
 #a.root.mainloop()

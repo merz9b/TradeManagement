@@ -71,7 +71,7 @@ class Test:
         if timeb-self.a>5:
             self.datab=self.datas
             self.a=timeb
-            print(self.datab)
+            print(timec,'正在运行')
     #        _thread.start_new_thread(self.tik,())
       
 
@@ -105,8 +105,8 @@ class Test:
             self.RelogEnable = False
 
     def StartQuote(self):
-        self.frontAddr = 'tcp://101.231.162.58:41213,tcp://101.231.162.59:41213'
-        self.broker = '6000'
+        self.frontAddr = 'tcp://101.231.162.58:41213,tcp://101.231.162.59:41213,tcp://180.168.146.187:10010' 
+        self.broker = '6000'#'6000'
         self.investor = ''
         self.pwd = ''
             
@@ -120,7 +120,7 @@ class Test:
     
         self.q.RegCB()
     
-        self.q.RegisterFront(self.frontAddr.split(',')[0])
+        self.q.RegisterFront(self.frontAddr.split(',')[2])
         self.q.Init()
         self.root.mainloop()
         #self.q.Join()
