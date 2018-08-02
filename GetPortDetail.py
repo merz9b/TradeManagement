@@ -26,5 +26,5 @@ def GetPortSub():
 if __name__ == '__main__':
     a = GetPortDetail('OTC_DCE-m',12001)
     print(a)
-    b = GetPortDetail2('oao_13001_11001_1529384746.623211')
+    b = GetPortDetail2('ovo_13001_11005_1533174873.6223238')
     print(b)

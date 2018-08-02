@@ -151,7 +151,8 @@ class Application(CTPUse.Test):
                 elif tmp['Type'][:3] == 'ovo':
                     self.info_greeks.append([tmp['Strike'],current_date,end_date,'','',tmp['DealVol'],\
                                              tmp['Rf'],tmp['Type'],tmp['OptionType'],tmp['Quantity'],\
-                                             tmp['Multiplier']])
+                                             tmp['Multiplier'],tmp['is_buy']])
+    
                     self.info_vol.append([tmp['Exchange'],tmp['Underlying'],tmp['TTM(days)'],[float(tmp['Strike'])],tmp['is_buy']])
                     #print(type(tmp['is_buy']))
                 else:
@@ -245,7 +246,8 @@ class Application(CTPUse.Test):
                 
         for i in range(len(res)):
             for each in list(self.sec_sub_dict_greeks.keys()):
-                TrueValue = res[i][each]*self.info_greeks[i][9]*self.info_greeks[i][10]
+                direction = -1 if self.info_greeks[i][11] == 1 else 1
+                TrueValue = res[i][each]*self.info_greeks[i][9]*self.info_greeks[i][10]*direction
                 TrueValue = round(TrueValue,3)
                 color = 'red' if TrueValue>=0 else 'green'
                 res_total[each] = res_total[each]+TrueValue
