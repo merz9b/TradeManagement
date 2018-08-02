@@ -266,7 +266,7 @@ class Application(CTPUse.Test):
         self.QuantVol = []
         
         for i in range(len(vol_buy)):
-            tmp = vol_buy[i] if self.info_vol[i][4] else vol_sell[i]  #若买，则计算greeks用vol_buy,反之用vol_sell
+            tmp = vol_sell[i] if self.info_vol[i][4] else vol_buy[i]  #若买，则计算greeks用vol_buy,反之用vol_sell
             self.QuantVol.append(tmp)
         
         self.clear(self.sec_sub_dict_vol)
