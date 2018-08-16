@@ -62,11 +62,11 @@ class Greeks_Euro:
         return rho/100
 
     def cpt_all_greeks(self):
-        res = {'Delta':round(self.cpt_delta(),3),
-               'Gamma':round(self.cpt_gamma(),3),
-               'Vega(%)':round(self.cpt_vega(),3),
-               'ThetaPerday':round(self.cpt_theta(),3),
-               'Rho(%)':round(self.cpt_rho(),3)     
+        res = {'Delta':round(self.cpt_delta(),8),
+               'Gamma':round(self.cpt_gamma(),8),
+               'Vega(%)':round(self.cpt_vega(),8),
+               'ThetaPerday':round(self.cpt_theta(),8),
+               'Rho(%)':round(self.cpt_rho(),8)     
                }
         return res
 
@@ -165,28 +165,42 @@ class Aisan_Greeks:
 
     def cpt_all_greeks(self):
         delta,gamma = self.cpt_delta_gamma()
-        res = {'Delta':round(delta,3),
-               'Gamma':round(gamma,3),
-               'Vega(%)':round(self.cpt_vega(),3),
-               'ThetaPerday':round(self.cpt_theta(),3),
-               'Rho(%)':round(self.cpt_rho(),3)
+        res = {'Delta':round(delta,8),
+               'Gamma':round(gamma,8),
+               'Vega(%)':round(self.cpt_vega(),8),
+               'ThetaPerday':round(self.cpt_theta(),8),
+               'Rho(%)':round(self.cpt_rho(),8)
                }
         return res
         
         
 if __name__ == '__main__':    
-    a = pd.datetime(2018,7,5)
-    b = pd.datetime(2018,10,3)
-    c = a
-    d = b
+    a = pd.datetime(2018,8,13)
+    b = pd.datetime(2018,9,8)
+    T = (b-a).days/365
+    S = 507
+    K1 = 512
+    K2 = 482
+    sigma1 = 0.31
+    sigma2 = 0.225
+    r = 0
+    status = 'put'
+    V1 = Greeks_Euro(S,r,sigma1,K1,T,status)
+    V2 = Greeks_Euro(S,r,sigma2,K2,T,status)
+
+    greeks1 = V1.cpt_all_greeks()
+    greeks2 = V2.cpt_all_greeks()
     
-    z = OptionPricer.random_gen(N=50000,T=1000)
+    
+    
+    
+    #z = OptionPricer.random_gen(N=50000,T=1000)
     
     
     #random,S,SA,r,sigma,K,price_date,maturity_date,start_fixed_date,end_fixed_date,status
-    V = Aisan_Greeks(z,15000,15000,0.01,0.3,15000,a,b,c,d,'call')
-    res = V.cpt_all_greeks()
-    print(res)
+    #V = Aisan_Greeks(z,15000,15000,0.01,0.3,15000,a,b,c,d,'call')
+    #res = V.cpt_all_greeks()
+    #print(res)
         
         
         
