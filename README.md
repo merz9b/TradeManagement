@@ -1,0 +1,2 @@
+# TradeManagement
+TradeManagement\UI.pyw
