@@ -134,7 +134,8 @@ class Application(CTPUse.Test):
                        'Underlying':underlying,\
                        'is_buy':info1.loc[i,'is_buy']}
                 tmp['Type'] = tmp['Type']+'_'+tmp['OptionType']
-                
+                tmp['is_buy']= -1 if tmp['is_buy'] == 1 else 1
+                tmp['Quantity']=tmp['is_buy']*tmp['Quantity']
                 
                 box_tmp = self.create_widgets(tmp)
                 
@@ -246,8 +247,8 @@ class Application(CTPUse.Test):
                 
         for i in range(len(res)):
             for each in list(self.sec_sub_dict_greeks.keys()):
-                direction = -1 if self.info_greeks[i][11] == 1 else 1
-                TrueValue = res[i][each]*self.info_greeks[i][9]*self.info_greeks[i][10]*direction
+                #direction = -1 if self.info_greeks[i][11] == 1 else 1
+                TrueValue = res[i][each]*self.info_greeks[i][9]*self.info_greeks[i][10]#*direction
                 TrueValue = round(TrueValue,3)
                 color = 'red' if TrueValue>=0 else 'green'
                 res_total[each] = res_total[each]+TrueValue
