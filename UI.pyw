@@ -56,8 +56,9 @@ class Application(CTPUse.Test):
         TraderID = TraderID['accountid'].tolist()
         self.TraderChosen['values'] =  TraderID
         self.TraderChosen.pack(fill='both')
+        
         self.TraderChosen.bind("<<ComboboxSelected>>",self.select_portfolio_symbol)
-    
+        
         self.PortfolioChosen = ttk.Combobox(labelframe1, width=12)
         self.PortfolioChosen.pack(fill='both')
         
@@ -94,7 +95,6 @@ class Application(CTPUse.Test):
         self.clear(self.sec_sub_dict)
         self.clear(self.sec_sub_dict_greeks)
         self.clear(self.sec_sub_dict_vol)
-        
         info1 = GetPortDetail.GetPortDetail(self.PortfolioChosen.get(),int(self.TraderChosen.get()))
         self.info_greeks = []
         self.box = []
@@ -169,11 +169,16 @@ class Application(CTPUse.Test):
         print(self.datab)
         print('===============================')
     def UpdateDataA(self,event):
-        self.UpdateDataOrigin()
-        
+        try:
+            self.UpdateDataOrigin()
+        except:
+            pass
     def UpdateData(self):
-        self.UpdateDataOrigin()
-        self.root.after(150000, self.UpdateData)
+        try:
+            self.UpdateDataOrigin()
+            self.root.after(150000, self.UpdateData)
+        except:
+            pass
         
     def create_section(self):
         self.sec3 = LabelFrame(self.root, text='Greeks')
